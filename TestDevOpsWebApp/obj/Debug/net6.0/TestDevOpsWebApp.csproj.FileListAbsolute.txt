@@ -29,3 +29,6 @@ C:\Users\aliaf\Desktop\TestMSSEDevOps\TestMSSEDevops\TestDevOpsWebApp\obj\Debug\
 C:\Users\aliaf\Desktop\TestMSSEDevOps\TestMSSEDevops\TestDevOpsWebApp\obj\Debug\net6.0\TestDevOpsWebApp.pdb
 C:\Users\aliaf\Desktop\TestMSSEDevOps\TestMSSEDevops\TestDevOpsWebApp\obj\Debug\net6.0\TestDevOpsWebApp.genruntimeconfig.cache
 C:\Users\aliaf\Desktop\TestMSSEDevOps\TestMSSEDevops\TestDevOpsWebApp\obj\Debug\net6.0\ref\TestDevOpsWebApp.dll
+C:\Users\aliaf\Desktop\TestMSSEDevOps\TestMSSEDevops\TestDevOpsWebApp\bin\Debug\net6.0\appsettings.Production.json
+C:\Users\aliaf\Desktop\TestMSSEDevOps\TestMSSEDevops\TestDevOpsWebApp\bin\Debug\net6.0\appsettings.Staging.json
+C:\Users\aliaf\Desktop\TestMSSEDevOps\TestMSSEDevops\TestDevOpsWebApp\bin\Debug\net6.0\appsettings.Testing.json

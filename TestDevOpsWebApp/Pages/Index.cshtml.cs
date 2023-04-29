@@ -12,6 +12,7 @@ public class IndexModel : PageModel
     private string EmailAddress { get; set; } = "";
     private string ErrorMessage { get; set; } = "";
     public string indexUI { get; private set; } = "";
+    public string env_index { get; private set; } = "";
     public IndexModel(IConfiguration _configuration)
     {
         configuration = _configuration;
@@ -20,6 +21,8 @@ public class IndexModel : PageModel
     public void OnGet()
     {
         indexUI = configuration["Index:Header"].ToString();
+        env_index = Environment.GetEnvironmentVariable("ENV_INDEX");
+        CallStg();
     }
     private void ValidateEmail()
     {
@@ -51,5 +54,33 @@ public class IndexModel : PageModel
     {
         int c = a + b;
         return c;
+    }
+    private void CallTest()
+    {
+        if (env_index == "Test")
+        {
+            indexUI = "Test";
+        }
+    }
+    private void CallDev()
+    {
+        if (env_index == "Development")
+        {
+            indexUI = "Development";
+        }
+    }
+    private void CallStg()
+    {
+        if (env_index == "Staging")
+        {
+            indexUI = "Staging";
+        }
+    }
+    private void CallPrd()
+    {
+        if (env_index == "Production")
+        {
+            indexUI = "Production";
+        }
     }
 }

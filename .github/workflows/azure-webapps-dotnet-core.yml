@@ -118,6 +118,10 @@ jobs:
         run: dotnet build --configuration Release
         working-directory: "./TestDevOpsWebApp"
 
+      - name: Test
+        run: dotnet test --no-build --verbosity Testing
+        working-directory: "./TestProjectMSSEDevOps"
+
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
         working-directory: "./TestDevOpsWebApp"

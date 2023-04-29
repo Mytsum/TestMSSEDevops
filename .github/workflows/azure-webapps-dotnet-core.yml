@@ -117,7 +117,7 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Testing
         working-directory: "./TestDevOpsWebApp"
 
       - name: Test
@@ -125,7 +125,7 @@ jobs:
         working-directory: "./TestProjectMSSEDevops"
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Testing -o ${{env.DOTNET_ROOT}}/myapp
         working-directory: "./TestDevOpsWebApp"
 
       - name: Upload artifact for deployment job
@@ -182,11 +182,11 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Staging
         working-directory: "./TestDevOpsWebApp"
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Staging -o ${{env.DOTNET_ROOT}}/myapp
         working-directory: "./TestDevOpsWebApp"
 
       - name: Upload artifact for deployment job
@@ -243,11 +243,11 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Production
         working-directory: "./TestDevOpsWebApp"
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Production -o ${{env.DOTNET_ROOT}}/myapp
         working-directory: "./TestDevOpsWebApp"
 
       - name: Upload artifact for deployment job

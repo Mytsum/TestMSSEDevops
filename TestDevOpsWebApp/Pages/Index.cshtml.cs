@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
 
@@ -7,17 +8,18 @@ namespace TestDevOpsWebApp.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
+    private IConfiguration configuration;
     private string EmailAddress { get; set; } = "";
     private string ErrorMessage { get; set; } = "";
-    public IndexModel(ILogger<IndexModel> logger)
+    public string indexUI { get; private set; } = "";
+    public IndexModel(IConfiguration _configuration)
     {
-        _logger = logger;
+        configuration = _configuration;
     }
 
     public void OnGet()
     {
-
+        indexUI = configuration["Index:Header"].ToString();
     }
     private void ValidateEmail()
     {

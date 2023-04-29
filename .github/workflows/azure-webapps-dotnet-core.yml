@@ -120,7 +120,7 @@ jobs:
 
       - name: Test
         run: dotnet test --no-build --verbosity Testing
-        working-directory: "./TestProjectMSSEDevOps"
+        working-directory: "./TestProjectMSSEDevops"
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp

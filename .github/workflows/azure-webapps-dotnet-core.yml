@@ -119,7 +119,7 @@ jobs:
         working-directory: "./TestDevOpsWebApp"
 
       - name: Test
-        run: dotnet test --no-build --verbosity Testing
+        run: dotnet test --no-build --verbosity normal
         working-directory: "./TestProjectMSSEDevops"
 
       - name: dotnet publish

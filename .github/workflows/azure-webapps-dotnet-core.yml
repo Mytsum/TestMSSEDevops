@@ -22,6 +22,8 @@ name: Build and deploy ASP.Net Core app to an Azure Web App
 env:
   AZURE_WEBAPP_NAME: dev-mssedevopssp23   # set this to the name of your Azure Web App
   AZURE_WEBAPP_NAME_TEST: test-mssedevopssp23
+  AZURE_WEBAPP_NAME_STG: stag-mssedevopssp23
+  AZURE_WEBAPP_NAME_PRD: prd-mssedevopssp23
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '6.0.*'                 # set this to the .NET Core version to use
 
@@ -158,4 +160,126 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME_TEST }}
           publish-profile: ${{ secrets.TEST_PUBLISH }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+  build_stag:
+    runs-on: ubuntu-latest
+    needs: deploy_test
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+        working-directory: "./TestDevOpsWebApp"
+
+      - name: dotnet publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        working-directory: "./TestDevOpsWebApp"
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
+
+  deploy_stag:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: build_stag
+    environment:
+      name: 'Staging'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: .net-app
+          
+      - name: Login job
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.STAG_AZURE }} 
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME_STG }}
+          publish-profile: ${{ secrets.STAG_PUBLISH }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          
+  build_PRD:
+    runs-on: ubuntu-latest
+    needs: deploy_stag
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+        working-directory: "./TestDevOpsWebApp"
+
+      - name: dotnet publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        working-directory: "./TestDevOpsWebApp"
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
+
+  deploy_PRD:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: build_PRD
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: .net-app
+          
+      - name: Login job
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.PRD_AZURE }} 
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME_PRD }}
+          publish-profile: ${{ secrets.PRD_PUBLISH }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}

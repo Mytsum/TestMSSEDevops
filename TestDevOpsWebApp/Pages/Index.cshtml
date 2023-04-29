@@ -5,9 +5,24 @@
 }
 
 <div class="text-center">
+
+    <h2>Enter Text</h2>
+    <input type="text" id="txtInput" name="inp" /><br /><br />
+    <button class="btn btn-primary" onclick="getText()" type="submit" name="chk">Get Text</button>
+    <h2 id="txtOutput">Output Text</h2><br />
+
+
+
     <h1 class="display-4">Welcome Ali to the azure portal MSSE - DEVOPS - SP23</h1>
 
     <h2>{This is <b style="color:red;">@Model.indexUI</b> Environment}</h2>
 
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<script>
+    function getText() {
+        var input = document.getElementById("txtInput");
+        var output = document.getElementById("txtOutput");
+        output.innerHTML = input.value;
+    }
+</script>
